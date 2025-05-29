@@ -1,0 +1,79 @@
+# Unity Project - .gitignore
+# Ignoring Unity-generated files, build artifacts, and editor-specific files
+
+# Unity Generated Folders (Cache and temporary files)
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+.utmp/  # Unity temporary files
+
+# Unity Generated Files
+*.log               # Unity log files
+*.blend1            # Blender backup files (not needed in version control):contentReference[oaicite:0]{index=0}
+*.blend1.meta       # Meta file for Blender backup
+
+# Unity Memory and Recording Data (large files not needed in VCS)
+[Mm]emoryCaptures/  # Unity memory profiler captures (can be very large/sensitive):contentReference[oaicite:1]{index=1}
+[Rr]ecordings/      # Unity recordings (e.g., screen recordings, etc.)
+
+# Unity Optional Plugins
+# (Uncomment the following to ignore Unity Asset Store Tools if added to the project)
+# /[Aa]ssets/AssetStoreTools*  :contentReference[oaicite:2]{index=2}
+
+# JetBrains Rider Unity plugin (auto-generated integration files)
+/[Aa]ssets/Plugins/Editor/JetBrains*:contentReference[oaicite:3]{index=3}
+
+# IDE/Editor-specific Files and Caches
+.vs/                # Visual Studio cache directory:contentReference[oaicite:4]{index=4}
+.gradle/            # Gradle cache (Android builds)
+ExportedObj/        # Unity exported object cache
+.consulo/           # Consulo (IDE) project files
+*.csproj            # C# project files (Visual Studio/Rider):contentReference[oaicite:5]{index=5}
+*.unityproj         # Unity project files
+*.sln               # Visual Studio solution files
+*.suo               # Visual Studio user preference files
+*.tmp               # Temporary files
+*.user              # User preference files (Visual Studio/Rider)
+*.userprefs         # User preference files
+*.pidb              # Unity script debugger symbol file
+*.booproj           # Boo project files
+*.svd               # Visual Studio dataset files
+*.pdb               # Program database (debug symbols)
+*.mdb               # Mono debug database
+*.opendb            # Visual Studio opened database
+*.VC.db             # Visual Studio cache database
+
+# IDE/Editor-generated Meta Files (associated with above)
+*.pidb.meta         # Meta files for debugger symbols:contentReference[oaicite:6]{index=6}
+*.pdb.meta
+*.mdb.meta
+
+# Unity Crash Reports
+sysinfo.txt         # Unity crash log file:contentReference[oaicite:7]{index=7}
+
+# Build Artifacts (platform-specific build outputs)
+*.apk               # Android build APKs:contentReference[oaicite:8]{index=8}
+*.aab               # Android app bundles
+*.unitypackage      # Unity package files (exported assets)
+*.unitypackage.meta # Meta file for Unity package
+*.app               # macOS/iOS application bundle
+
+# Crashlytics (Mobile crash reporting) files
+crashlytics-build.properties:contentReference[oaicite:9]{index=9}
+
+# Unity Addressables (packed assets data)
+[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*:contentReference[oaicite:10]{index=10}
+
+# Temporary auto-generated Android assets (Addressables StreamingAssets data)
+[Ss]treamingAssets/aa.meta:contentReference[oaicite:11]{index=11}
+[Ss]treamingAssets/aa/*   # Ignoring Addressables asset bundles
+
+# Unity Visual Scripting Generated Files
+[Uu]nity.VisualScripting.Generated/VisualScripting.Flow/UnitOptions.db:contentReference[oaicite:12]{index=12}
+[Uu]nity.VisualScripting.Generated/VisualScripting.Flow/UnitOptions.db.meta
+[Uu]nity.VisualScripting.Generated/VisualScripting.Core/Property Providers:contentReference[oaicite:13]{index=13}
+[Uu]nity.VisualScripting.Generated/VisualScripting.Core/Property Providers.meta
