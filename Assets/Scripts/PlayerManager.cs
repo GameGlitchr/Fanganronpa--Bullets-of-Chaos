@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    //public LogicScript_Trevor logic;
-    //public PortalBehvaior_Alex portal;
     public static PlayerManager instance;
 
 
@@ -16,9 +14,6 @@ public class PlayerManager : MonoBehaviour
 
     private void Awake()
     {
-        //logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicScript_Trevor>();
-        //portal = GameObject.FindGameObjectWithTag("Portal").GetComponent<PortalBehvaior_Alex>();
-
         instance = this;
     }
 
@@ -39,13 +34,11 @@ public class PlayerManager : MonoBehaviour
     {
         if (!isPaused)
         {
-            //logic.SkillTree();
             enableFPS(false);
 
         }
         else if (isPaused)
         {
-           // logic.SkillTreeVanish();
             enableFPS(true);
 
         }
