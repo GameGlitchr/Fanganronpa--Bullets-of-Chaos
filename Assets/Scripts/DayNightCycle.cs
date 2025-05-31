@@ -7,7 +7,7 @@ public class DayNightCycle : MonoBehaviour
     public TextMeshProUGUI clockText;
     public bool use24HourClock = false;
 
-    public float fullDayDuration = 900f; // 15 minutes total
+    public float fullDayDuration = 900f;  // 15 minutes total
     private float dayDuration = 600f;     // 10 minutes
     private float nightDuration = 300f;   // 5 minutes
 
@@ -17,14 +17,19 @@ public class DayNightCycle : MonoBehaviour
 
     void Start()
     {
-        daySpeed = 240f / dayDuration;
-        nightSpeed = 120f / nightDuration;
+        daySpeed = 240f / dayDuration;   // 240 degrees over 10 mins
+        nightSpeed = 120f / nightDuration; // 120 degrees over 5 mins
     }
 
     void Update()
     {
+        if (PlayerManager.instance != null && PlayerManager.instance.isPaused)
+            return;
+
+        // Determine current time period
         float speed = currentRotation < 240f ? daySpeed : nightSpeed;
 
+        // Advance sun rotation
         currentRotation += speed * Time.deltaTime;
         if (currentRotation >= 360f)
         {
@@ -32,6 +37,7 @@ public class DayNightCycle : MonoBehaviour
         }
 
         Sun.transform.rotation = Quaternion.Euler(currentRotation, 0f, 0f);
+
         UpdateClock();
     }
 
@@ -57,5 +63,4 @@ public class DayNightCycle : MonoBehaviour
             clockText.text = $"{twelveHour:00}:{minute:00} {period}";
         }
     }
-
 }

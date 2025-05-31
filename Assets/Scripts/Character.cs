@@ -48,6 +48,15 @@ public class Character : MonoBehaviour, IInteractable
 
     void Update()
     {
+
+        if (PlayerManager.instance.isPaused)
+        {
+            agent.isStopped = true;
+            return;
+        }
+
+        agent.isStopped = false;
+
         Despair += Time.deltaTime / 10;
 
         if (bored && !isWaiting)

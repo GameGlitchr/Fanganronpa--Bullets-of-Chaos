@@ -34,11 +34,19 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (!PlayerManager.instance.isPaused)
-        {
-            HandleMouseLook();
-            HandleInputs();
-        }
+        if (PlayerManager.instance.isPaused)
+            return;
+
+        HandleMouseLook();
+        HandleInputs();
+    }
+
+    public void enableFPS(bool enable)
+    {
+        GetComponent<CharacterController>().enabled = enable;
+       // mouseSensitivity = enable ? originalSensitivity : 0f;
+        Cursor.lockState = enable ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.visible = !enable;
     }
 
     private void HandleMouseLook()
@@ -74,6 +82,14 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.D))
         {
             direction += Camera.main.transform.right;
+        }
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            moveSpeed *= 3f;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            moveSpeed /= 3f;
         }
 
         if (Input.GetKey(KeyCode.Q))
@@ -114,7 +130,7 @@ public class Player : MonoBehaviour
         // Handle Evidence Window
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            evidenceMenuOpen = !evidenceMenuOpen;
+            //evidenceMenuOpen = !evidenceMenuOpen;
             Debug.Log($"Evidence Menu Open: {evidenceMenuOpen}");
 
             if (evidenceMenuOpen)
