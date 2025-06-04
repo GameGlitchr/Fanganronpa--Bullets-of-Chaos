@@ -13,11 +13,22 @@ public class Player : MonoBehaviour
     private ArgumentUIManager argumentUIManager;
     private EvidenceUIManager evidenceUIManager;
     private QuestIDManager questIDManager;
+    private TabletUIManager tabletManager;
 
     public Evidence Evidence;
 
     public bool argueMenuOpen = false;
-    public bool evidenceMenuOpen = false;
+    //public bool evidenceMenuOpen = false;
+
+    /*public int TabletUIManager.TabletState;
+    public int tabletInRest = 0;
+    public int tabletInView = 1;
+    public int tabletInFullScreen = 2;*/
+
+    public TabletUIManager.TabletState tabletMode;
+
+    //public bool tabletInView = false;
+    //public bool tabletInFullScreen = false;
 
     void Start()
     {
@@ -26,10 +37,12 @@ public class Player : MonoBehaviour
         argumentUIManager = FindFirstObjectByType<ArgumentUIManager>();
         evidenceUIManager = FindFirstObjectByType<EvidenceUIManager>();
         questIDManager = FindFirstObjectByType<QuestIDManager>();
+        tabletManager = FindFirstObjectByType<TabletUIManager>();
 
         // Ensure the UI components are hidden initially
         argumentUIManager.HideArgumentUI();
         evidenceUIManager.HideEvidenceUI();
+
     }
 
     void Update()
@@ -39,15 +52,17 @@ public class Player : MonoBehaviour
 
         HandleMouseLook();
         HandleInputs();
+
+        tabletMode = tabletManager.currentState;
     }
 
-    public void enableFPS(bool enable)
+    /*public void enableFPS(bool enable)
     {
-        GetComponent<CharacterController>().enabled = enable;
+       // GetComponent<CharacterController>().enabled = enable;
        // mouseSensitivity = enable ? originalSensitivity : 0f;
         Cursor.lockState = enable ? CursorLockMode.Locked : CursorLockMode.None;
         Cursor.visible = !enable;
-    }
+    }*/
 
     private void HandleMouseLook()
     {
@@ -115,7 +130,7 @@ public class Player : MonoBehaviour
 
             if (argueMenuOpen)
             {
-                evidenceMenuOpen = false;
+                //evidenceMenuOpen = false;
                 evidenceUIManager.HideEvidenceUI();
                 argumentUIManager.ShowArgumentUI();
             }
@@ -124,30 +139,28 @@ public class Player : MonoBehaviour
                 argumentUIManager.HideArgumentUI();
             }
 
-            ToggleCursorAndMouseSensitivity(argueMenuOpen);
+            //ToggleCursorAndMouseSensitivity(argueMenuOpen);
         }
 
         // Handle Evidence Window
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            //evidenceMenuOpen = !evidenceMenuOpen;
-            Debug.Log($"Evidence Menu Open: {evidenceMenuOpen}");
-
-            if (evidenceMenuOpen)
+            if (tabletMode == TabletUIManager.TabletState.Hidden)
             {
-                argueMenuOpen = false;
-                argumentUIManager.HideArgumentUI();
-                evidenceUIManager.ShowEvidenceUI();
+                tabletMode = TabletUIManager.TabletState.View;
             }
-            else
+            else if (tabletMode == TabletUIManager.TabletState.View)
             {
-                evidenceUIManager.HideEvidenceUI();
+                tabletMode = TabletUIManager.TabletState.Hidden;
             }
 
-            ToggleCursorAndMouseSensitivity(evidenceMenuOpen);
+            //Debug.Log("Tablet Mode: " + TabletUIManager.TabletState);
+            
+          
+                ToggleCursorAndMouseSensitivity(tabletMode);
         }
 
-        if (Input.GetKeyDown(KeyCode.E) && evidenceMenuOpen)
+        if (Input.GetKeyDown(KeyCode.E) /*&& evidenceMenuOpen*/)
         {
             evidenceUIManager.ToggleButtons();
         }
@@ -155,23 +168,29 @@ public class Player : MonoBehaviour
 
     public void CloseEvidenceMenu()
     {
-        evidenceMenuOpen = false;
+        //evidenceMenuOpen = false;
         evidenceUIManager.HideEvidenceUI();
-        ToggleCursorAndMouseSensitivity(evidenceMenuOpen);
+        //ToggleCursorAndMouseSensitivity(evidenceMenuOpen);
     }
 
-    public void ToggleCursorAndMouseSensitivity(bool menuOpen)
+    public void ToggleCursorAndMouseSensitivity(TabletUIManager.TabletState tabletMode)
     {
-        Debug.Log($"Toggle Cursor and Mouse Sensitivity: Menu Open: {menuOpen}");
-        if (menuOpen)
-        {
-            Cursor.lockState = CursorLockMode.None;
-            mouseSensitivity = 0f;
-        }
-        else
+        //Debug.Log($"Toggle Cursor and Mouse Sensitivity: Menu Open: {menuOpen}");
+        if (tabletMode == TabletUIManager.TabletState.Hidden)
         {
             Cursor.lockState = CursorLockMode.Locked;
             mouseSensitivity = 1000f;
+
+        }
+        else if (tabletMode == TabletUIManager.TabletState.View)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            mouseSensitivity = 500f;
+        }
+        else if (tabletMode == TabletUIManager.TabletState.Fullscreen)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            mouseSensitivity = 0f;
         }
     }
 

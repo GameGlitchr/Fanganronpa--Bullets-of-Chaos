@@ -64,7 +64,7 @@ public class PlayerInteraction : MonoBehaviour
             {
                 dialogUIManager.HideDialogUI();
                 dialogMenuOpen = false;
-                player.ToggleCursorAndMouseSensitivity(dialogMenuOpen);
+                //player.ToggleCursorAndMouseSensitivity(dialogMenuOpen); //COME BACK AND FIX THIS SHIT YOU DUMBASS YOU FORGOT TO FIX THE NPC DIALOG JACKASS
                 player.moveSpeed = 5f; // Restore player movement
             }
             else
@@ -82,7 +82,7 @@ public class PlayerInteraction : MonoBehaviour
         else
         {
             dialogMenuOpen = true;
-            player.ToggleCursorAndMouseSensitivity(dialogMenuOpen);
+            //player.ToggleCursorAndMouseSensitivity(dialogMenuOpen); //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
             player.moveSpeed = 0; // Stop player movement
             currentNPC = npcDialog;
             string dialogLine = currentNPC.GetNextDialogLine();

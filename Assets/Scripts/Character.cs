@@ -126,7 +126,7 @@ public class Character : MonoBehaviour, IInteractable
         agent.isStopped = true;
 
         float waitTime = Random.Range(1f, 10f);
-        Debug.Log($"Waiting for {waitTime} seconds.");
+        //Debug.Log($"Waiting for {waitTime} seconds.");
         yield return new WaitForSeconds(waitTime);
 
         agent.isStopped = false;
