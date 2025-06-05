@@ -41,7 +41,7 @@ public class Player : MonoBehaviour
 
         // Ensure the UI components are hidden initially
         argumentUIManager.HideArgumentUI();
-        evidenceUIManager.HideEvidenceUI();
+       // evidenceUIManager.HideEvidenceUI();
 
     }
 
@@ -131,7 +131,7 @@ public class Player : MonoBehaviour
             if (argueMenuOpen)
             {
                 //evidenceMenuOpen = false;
-                evidenceUIManager.HideEvidenceUI();
+                //evidenceUIManager.HideEvidenceUI();
                 argumentUIManager.ShowArgumentUI();
             }
             else
@@ -162,14 +162,14 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E) /*&& evidenceMenuOpen*/)
         {
-            evidenceUIManager.ToggleButtons();
+            //evidenceUIManager.ToggleButtons();
         }
     }
 
     public void CloseEvidenceMenu()
     {
         //evidenceMenuOpen = false;
-        evidenceUIManager.HideEvidenceUI();
+        //evidenceUIManager.HideEvidenceUI();
         //ToggleCursorAndMouseSensitivity(evidenceMenuOpen);
     }
 

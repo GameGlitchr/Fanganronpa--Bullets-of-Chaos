@@ -1,120 +1,118 @@
+// === EvidenceUIManager.cs (REWRITTEN) ===
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class EvidenceUIManager : MonoBehaviour
 {
+    [Header("UI References")]
+    public GameObject EvidenceScreen_Portrait;
+    public GameObject EvidenceScreen_Landscape;
+    public Transform contentParentPortrait;
+    public Transform contentParentLandscape;
+    public Image evidenceImagePortrait;
+    public Image evidenceImageLandscape;
+    public GameObject evidenceButtonPrefab;
+    public GameObject evidenceDescriptionPanelPortrait;
+    public GameObject evidenceDescriptionPanelLandscape;
+    public TextMeshProUGUI evidenceTitleTextPortrait;
+    public TextMeshProUGUI evidenceTitleTextLandscape;
+    public TextMeshProUGUI evidenceDescriptionTextPortrait;
+    public TextMeshProUGUI evidenceDescriptionTextLandscape;
+
+    [Header("Sprites (Optional)")]
+    public List<Sprite> evidenceSprites;
+
     private Dictionary<ClueSuspectCombination, Conclusion> conclusionsDictionary;
-    public List<Conclusion> drawnConclusions;
+    public List<Conclusion> drawnConclusions = new List<Conclusion>();
+    private int clueOne = -1;
+    private int clueTwo = -1;
+    private int suspect = -1;
 
-    public GameObject evidenceUI; // Reference to the UI panel
-    public GameObject confirmScreen;
-    public GameObject buttonCanvas;
-    public List<Button> evidenceButtons; // List of evidence buttons
-    public List<Sprite> evidenceSprites; // List to store sprites for evidence
-    public List<Sprite> characterSprites; // List to store sprites for characters
-    public Image[] evidenceImages; // Array to store references to evidence images
-    public Image characterImage; // Reference to the image that will display the selected character
-    public Slider characterSlider; // Reference to the slider for selecting a character
-    public Button submitButton;
-    public Button cancelButton;
-
-    private int clueOne;
-    private int clueTwo;
-    private int suspect;
-
-    private int currentImageIndex = 0;
-    private Player player;
-
-    private bool confirmDialog = false;
-
-    void Start()
+    private void Start()
     {
-        evidenceUI.SetActive(false);
-        confirmScreen.SetActive(false);
-        player = FindFirstObjectByType<Player>();
-        drawnConclusions = new List<Conclusion>();
         InitializeConclusions();
-
-        // Hide all evidence buttons initially
-        foreach (var button in evidenceButtons)
-        {
-            button.gameObject.SetActive(false);
-        }
-
-        // Add listener to the slider to handle value changes
-        characterSlider.onValueChanged.AddListener(OnCharacterSliderValueChanged);
-        characterImage.sprite = characterSprites[0];
-        submitButton.onClick.AddListener(DrawConclusion);
-
-        // Add listener to the cancel button to close the evidence menu
-        cancelButton.onClick.AddListener(() => player.CloseEvidenceMenu());
-    }
-
-    public void ShowEvidenceUI()
-    {
-        evidenceUI.SetActive(true);
-    }
-
-    public void HideEvidenceUI()
-    {
-        evidenceUI.SetActive(false);
-    }
-
-    public void ToggleButtons()
-    {
-        confirmDialog = !confirmDialog;
-        confirmScreen.SetActive(confirmDialog);
-        buttonCanvas.SetActive(!confirmDialog);
+        evidenceDescriptionPanelPortrait.SetActive(false);
+        evidenceDescriptionPanelLandscape.SetActive(false);
     }
 
     public void AddEvidence(int evidenceID, string evidenceName, string evidenceDescription)
     {
-        if (evidenceID < 0 || evidenceID >= evidenceButtons.Count)
-        {
-            Debug.LogError($"Invalid evidence ID for button: {evidenceID}");
-            return;
-        }
-
-        Button button = evidenceButtons[evidenceID];
-        button.gameObject.SetActive(true);
-        //button.GetComponentInChildren<Text>().text = evidenceName;
-
-        // Add onClick listener to update images when button is clicked
-        button.onClick.AddListener(() => UpdateEvidenceImages(evidenceID));
+        AddEvidenceToCanvas(contentParentPortrait, evidenceID, evidenceName, evidenceDescription);
+        AddEvidenceToCanvas(contentParentLandscape, evidenceID, evidenceName, evidenceDescription);
     }
 
-    private void UpdateEvidenceImages(int evidenceID)
+    private void AddEvidenceToCanvas(Transform parent, int evidenceID, string name, string desc)
     {
-        if (evidenceID < 0 || evidenceID >= evidenceSprites.Count)
-        {
-            Debug.LogError($"Invalid evidence ID for sprite: {evidenceID}");
-            return;
-        }
+        Debug.Log("adding evidence: " + name + " to the canvas");
+        GameObject buttonObj = Instantiate(evidenceButtonPrefab, parent);
+        TextMeshProUGUI buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
+        if (buttonText != null)
+            buttonText.text = name;
 
-        if (currentImageIndex >= evidenceImages.Length)
+        Button button = buttonObj.GetComponent<Button>();
+        if (button != null)
         {
-            currentImageIndex = 0;
+            button.onClick.AddListener(() => ShowEvidenceDetails(name, desc));
+            button.onClick.AddListener(() => SelectClue(evidenceID));
         }
-
-        evidenceImages[currentImageIndex].sprite = evidenceSprites[evidenceID];
-        if (currentImageIndex == 0) { clueOne = evidenceID; }
-        else if (currentImageIndex == 1) { clueTwo = evidenceID; }
-        currentImageIndex++;
     }
 
-    private void OnCharacterSliderValueChanged(float value)
+    private void ShowEvidenceDetails(string name, string desc)
     {
-        int characterID = (int)value;
-        if (characterID < 0 || characterID >= characterSprites.Count)
+        evidenceDescriptionPanelPortrait.SetActive(true);
+        evidenceTitleTextPortrait.text = name;
+        evidenceDescriptionTextPortrait.text = desc;
+        evidenceDescriptionPanelLandscape.SetActive(true);
+        evidenceTitleTextLandscape.text = name;
+        evidenceDescriptionTextLandscape.text = desc;
+    }
+
+    private void SelectClue(int evidenceID)
+    {
+        if (clueOne == -1)
         {
-            Debug.LogError($"Invalid character ID for sprite: {characterID}");
+            clueOne = evidenceID;
+            Debug.Log($"Clue One set to ID: {clueOne}");
+        }
+        else if (clueTwo == -1 && evidenceID != clueOne)
+        {
+            clueTwo = evidenceID;
+            Debug.Log($"Clue Two set to ID: {clueTwo}");
+        }
+        else
+        {
+            Debug.LogWarning("Both clues already set. Resetting clues.");
+            clueOne = evidenceID;
+            clueTwo = -1;
+        }
+    }
+
+    public void SelectSuspect(int suspectID)
+    {
+        suspect = suspectID;
+        Debug.Log($"Suspect selected: {suspect}");
+    }
+
+    public void DrawConclusion()
+    {
+        if (clueOne == -1 || clueTwo == -1 || suspect == -1)
+        {
+            Debug.LogWarning("Missing a clue or suspect.");
             return;
         }
 
-        characterImage.sprite = characterSprites[characterID];
-        suspect = characterID;
-        Debug.Log($"Selected Character ID: {characterID}");
+        var combo = new ClueSuspectCombination(clueOne, clueTwo, suspect);
+        if (conclusionsDictionary.TryGetValue(combo, out Conclusion conclusion))
+        {
+            drawnConclusions.Add(conclusion);
+            Debug.Log("Conclusion Drawn: " + conclusion.Text);
+        }
+        else
+        {
+            Debug.Log("No valid conclusion found for the selected combination.");
+        }
     }
 
     private void InitializeConclusions()
@@ -129,44 +127,17 @@ public class EvidenceUIManager : MonoBehaviour
         };
     }
 
-    public event System.Action<List<Conclusion>> OnConclusionsUpdated; // Event to notify listeners
-
-    public void DrawConclusion()
-    {
-        var combination = new ClueSuspectCombination(clueOne, clueTwo, suspect);
-        if (conclusionsDictionary.TryGetValue(combination, out Conclusion conclusion))
-        {
-            drawnConclusions.Add(conclusion);
-            Debug.Log($"Conclusion Drawn: {conclusion.Text}");
-            OnConclusionsUpdated?.Invoke(drawnConclusions); // Notify listeners about updated conclusions
-        }
-        else
-        {
-            Debug.Log("No valid conclusion could be drawn with the given clues and suspect.");
-        }
-        HideEvidenceUI();
-    }
-
     public List<Conclusion> GetDrawnConclusions()
     {
         return drawnConclusions;
     }
-}
 
-public class Conclusion
-{
-    public string Text { get; }
-    public int RelevanceToTopic { get; }
-    public int RelevanceToMurder { get; }
-    public int Truthfulness { get; }
-    public int ArgumentType { get; }
-
-    public Conclusion(string text, int relevanceToTopic, int relevanceToMurder, int truthfulness, int argumentType)
+    public void ResetSelection()
     {
-        Text = text;
-        RelevanceToTopic = relevanceToTopic;
-        RelevanceToMurder = relevanceToMurder;
-        Truthfulness = truthfulness;
-        ArgumentType = argumentType;
+        clueOne = -1;
+        clueTwo = -1;
+        suspect = -1;
+        evidenceDescriptionPanelPortrait.SetActive(false);
+        evidenceDescriptionPanelLandscape.SetActive(false);
     }
 }

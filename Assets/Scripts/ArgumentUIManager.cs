@@ -30,7 +30,8 @@ public class ArgumentUIManager : MonoBehaviour
 
         if (evidenceUIManager != null)
         {
-            evidenceUIManager.OnConclusionsUpdated += UpdateDrawnConclusions;
+            // evidenceUIManager.OnConclusionsUpdated += UpdateDrawnConclusions;
+            UpdateDrawnConclusions(evidenceUIManager.drawnConclusions);
             drawnConclusions = evidenceUIManager.GetDrawnConclusions();
         }
 
@@ -156,5 +157,5 @@ public class ArgumentUIManager : MonoBehaviour
 
 
         
-    }
+    } 
 }

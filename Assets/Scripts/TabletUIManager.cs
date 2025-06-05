@@ -212,20 +212,20 @@ public class TabletUIManager : MonoBehaviour
     {
         SetActiveScreen(TabletScreenType.Evidence);
         evidencePanel.SetActive(true);
-        argumentPanel.SetActive(false);
+        //argumentPanel.SetActive(false);
     }
 
     public void ShowArgumentUI()
     {
         SetActiveScreen(TabletScreenType.Argument);
         argumentPanel.SetActive(true);
-        evidencePanel.SetActive(false);
+        //evidencePanel.SetActive(false);
     }
 
     public void GoHome()
     {
         SetActiveScreen(TabletScreenType.Home);
         evidencePanel.SetActive(false);
-        argumentPanel.SetActive(false);
+        //argumentPanel.SetActive(false);
     }
 }
