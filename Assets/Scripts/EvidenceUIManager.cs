@@ -46,6 +46,7 @@ public class EvidenceUIManager : MonoBehaviour
     private void AddEvidenceToCanvas(Transform parent, int evidenceID, string name, string desc)
     {
         Debug.Log("adding evidence: " + name + " to the canvas");
+        Debug.Log($"Instantiating button for {name}");
         GameObject buttonObj = Instantiate(evidenceButtonPrefab, parent);
         TextMeshProUGUI buttonText = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
         if (buttonText != null)

@@ -14,6 +14,9 @@ public class TabletUIManager : MonoBehaviour
     public Transform viewPosition;
     public Transform fullscreenPosition;
 
+    public Transform UIContainer;
+    public Transform UIScreenAnchor;
+
     public GameObject HomeScreen_Portrait;
     public GameObject HomeScreen_Landscape;
     public GameObject EvidenceScreen_Portrait;
@@ -78,7 +81,10 @@ public class TabletUIManager : MonoBehaviour
         NotesButtonL.onClick.AddListener(() => SetActiveScreen(TabletScreenType.Notes));
         MessagesButtonP.onClick.AddListener(() => SetActiveScreen(TabletScreenType.Messages));
         MessagesButtonL.onClick.AddListener(() => SetActiveScreen(TabletScreenType.Messages));
-      
+
+        
+
+
     }
 
     void Update()
@@ -103,7 +109,21 @@ public class TabletUIManager : MonoBehaviour
                 tabletObject.transform.localRotation = currentTarget.localRotation;
             }
         }
+        AlignUIToScreen();
     }
+
+    private void AlignUIToScreen()
+    {
+        if (UIContainer != null && UIScreenAnchor != null)
+        {
+            UIContainer.position = UIScreenAnchor.position;
+            UIContainer.rotation = UIScreenAnchor.rotation;
+            UIContainer.localScale = Vector3.one;
+        }
+    }
+
+
+
 
     public void ToggleFullscreen()
     {
