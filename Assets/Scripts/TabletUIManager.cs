@@ -179,6 +179,10 @@ public class TabletUIManager : MonoBehaviour
         ArgumentScreen_Portrait.SetActive(false);
         ArgumentScreen_Landscape.SetActive(false);
 
+        // Also disable panels tied to these screens
+        evidencePanel.SetActive(false);
+        //argumentPanel.SetActive(false);
+
         bool isFullscreen = currentState == TabletState.Fullscreen;
 
         switch (screen)
@@ -191,47 +195,45 @@ public class TabletUIManager : MonoBehaviour
             case TabletScreenType.Evidence:
                 if (isFullscreen) EvidenceScreen_Landscape.SetActive(true);
                 else EvidenceScreen_Portrait.SetActive(true);
+                evidencePanel.SetActive(true); // ✅ make sure the panel comes back!
                 break;
 
             case TabletScreenType.Argument:
                 if (isFullscreen) ArgumentScreen_Landscape.SetActive(true);
                 else ArgumentScreen_Portrait.SetActive(true);
+                //argumentPanel.SetActive(true);
                 break;
+
             case TabletScreenType.Conclusions:
-                if (isFullscreen) Debug.Log("Conclusion Button Clicked. Is FullScreen? " + isFullscreen);
-                else Debug.Log("Conclusion Button Clicked. Is FullScreen? " + isFullscreen);
+                Debug.Log("Conclusion Button Clicked.");
                 break;
             case TabletScreenType.Profiles:
-                if (isFullscreen) Debug.Log("Profile Button Clicked. Is FullScreen? " + isFullscreen);
-                else Debug.Log("Profile Button Clicked. Is FullScreen? " + isFullscreen);
+                Debug.Log("Profile Button Clicked.");
                 break;
             case TabletScreenType.Rules:
-                if (isFullscreen) Debug.Log("Rules Button Clicked. Is FullScreen? " + isFullscreen);
-                else Debug.Log("Rules Button Clicked. Is FullScreen? " + isFullscreen);
+                Debug.Log("Rules Button Clicked.");
                 break;
             case TabletScreenType.Settings:
-                if (isFullscreen) Debug.Log("Settings Button Clicked. Is FullScreen? " + isFullscreen);
-                else Debug.Log("Settings Button Clicked. Is FullScreen? " + isFullscreen);
+                Debug.Log("Settings Button Clicked.");
                 break;
             case TabletScreenType.Camera:
-                if (isFullscreen) Debug.Log("Camera Button Clicked. Is FullScreen? " + isFullscreen);
-                else Debug.Log("Camera Button Clicked. Is FullScreen? " + isFullscreen);
+                Debug.Log("Camera Button Clicked.");
                 break;
             case TabletScreenType.Notes:
-                if (isFullscreen) Debug.Log("Notes Button Clicked. Is FullScreen? " + isFullscreen);
-                else Debug.Log("Notes Button Clicked. Is FullScreen? " + isFullscreen);
+                Debug.Log("Notes Button Clicked.");
                 break;
             case TabletScreenType.Messages:
-                if (isFullscreen) Debug.Log("Messages Button Clicked. Is FullScreen? " + isFullscreen);
-                else Debug.Log("Messages Button Clicked. Is FullScreen? " + isFullscreen);
+                Debug.Log("Messages Button Clicked.");
                 break;
         }
     }
+
 
     public void ShowEvidenceUI()
     {
         SetActiveScreen(TabletScreenType.Evidence);
         evidencePanel.SetActive(true);
+        FindFirstObjectByType<EvidenceUIManager>().EnsurePanelActive();
         //argumentPanel.SetActive(false);
     }
 
