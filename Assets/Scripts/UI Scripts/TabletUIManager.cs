@@ -23,6 +23,8 @@ public class TabletUIManager : MonoBehaviour
     public GameObject EvidenceScreen_Landscape;
     public GameObject ArgumentScreen_Portrait;
     public GameObject ArgumentScreen_Landscape;
+    public GameObject ProfileScreen_Portrait;
+    public GameObject ProfileScreen_Landscape;
 
     public Button HomeButton;
     public Button FullScreenButton;
@@ -82,9 +84,6 @@ public class TabletUIManager : MonoBehaviour
         MessagesButtonP.onClick.AddListener(() => SetActiveScreen(TabletScreenType.Messages));
         MessagesButtonL.onClick.AddListener(() => SetActiveScreen(TabletScreenType.Messages));
 
-        
-
-
     }
 
     void Update()
@@ -121,9 +120,6 @@ public class TabletUIManager : MonoBehaviour
             UIContainer.localScale = Vector3.one;
         }
     }
-
-
-
 
     public void ToggleFullscreen()
     {
@@ -178,6 +174,8 @@ public class TabletUIManager : MonoBehaviour
         EvidenceScreen_Landscape.SetActive(false);
         ArgumentScreen_Portrait.SetActive(false);
         ArgumentScreen_Landscape.SetActive(false);
+        ProfileScreen_Portrait.SetActive(false);
+        ProfileScreen_Landscape.SetActive(false);
 
         // Also disable panels tied to these screens
         evidencePanel.SetActive(false);
@@ -208,7 +206,8 @@ public class TabletUIManager : MonoBehaviour
                 Debug.Log("Conclusion Button Clicked.");
                 break;
             case TabletScreenType.Profiles:
-                Debug.Log("Profile Button Clicked.");
+                if (isFullscreen) ProfileScreen_Landscape.SetActive(true);
+                else ProfileScreen_Portrait.SetActive(true);
                 break;
             case TabletScreenType.Rules:
                 Debug.Log("Rules Button Clicked.");

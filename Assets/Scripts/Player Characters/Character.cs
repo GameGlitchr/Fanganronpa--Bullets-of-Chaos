@@ -21,6 +21,9 @@ public struct LocationOpinion
 {
     public string locationName;
     public float opinionValue;
+
+    public float goodLocationMemories;
+    public float badLocationMemories;
 }
 
 
@@ -90,9 +93,7 @@ public class Character : CharacterBase, IInteractable
         StartCoroutine(GoldfishMemory());
     }
 
-    /// <summary>
-    /// Pre-update checks to make sure character is in place with the right face
-    /// </summary>
+    #region Housekeeping
 
     private void SnapToNavMesh()
     {
@@ -136,6 +137,8 @@ public class Character : CharacterBase, IInteractable
             Debug.LogWarning($"{charName} failed to assign back material: {backMatPath}");
         }
     }
+
+    #endregion
 
     /// <summary>
     /// main loop
@@ -200,6 +203,9 @@ public class Character : CharacterBase, IInteractable
         }
         //Debug.Log($"{charName} | Bored: {bored}, isWaiting: {isWaiting}, isInteracting: {isInteracting}");
     }
+
+
+    #region Memory and Mood
 
     private void IncrementDespair()
     {
@@ -356,7 +362,12 @@ public class Character : CharacterBase, IInteractable
     }
 
 
+    #endregion
 
+
+
+
+    #region Opinions and Relationships
 
     /// <summary>
     /// character emotions and relationships
@@ -435,6 +446,16 @@ public class Character : CharacterBase, IInteractable
         besties.Clear();
         enemies.Clear();
 
+        for (int i = 0; i < 16; i++)
+        {
+            if (i == charID) continue;
+
+            if (inseparableBesties.Contains(i))
+                opinions[i] = 100f;
+            else if (swornEnemies.Contains(i))
+                opinions[i] = 0f;
+        }
+
         // Sort by opinion descending for besties
         var topThree = opinions
             .Where(p => p.Value >= 80)
@@ -456,6 +477,21 @@ public class Character : CharacterBase, IInteractable
             enemies.Add(id);
     }
 
+    public void GetBesties()
+    {
+
+    }
+
+    public void GetEnemies()
+    {
+
+    }
+
+    public void GetHangouts()
+    {
+
+    }
+
 
     private void InitializeLocationOpinions()
     {
@@ -473,13 +509,6 @@ public class Character : CharacterBase, IInteractable
                 });
             }
         }
-    }
-
-    [System.Serializable]
-    public struct LocationOpinion
-    {
-        public string locationName;
-        public float opinionValue;
     }
 
 
@@ -582,6 +611,11 @@ public class Character : CharacterBase, IInteractable
     }
 
 
+    #endregion
+
+
+
+    #region NPC Behavior
 
     /// <summary>
     /// NPC behavior
@@ -684,6 +718,7 @@ public class Character : CharacterBase, IInteractable
         }
     }
 
+    #endregion
 
 
     /// <summary>
@@ -1093,6 +1128,43 @@ public class Character : CharacterBase, IInteractable
         ChangeOpinion(partner.charID, opinionDelta);
         Debug.Log($"{charName}'s opinion of {partner.charName} changed by {opinionDelta}");
 
+        // Determine location mood impact
+        if (currentLocation != null)
+        {
+            float locDelta = opinionDelta;
+
+            switch (currentLocationStatus)
+            {
+                case LocationStatus.InLocation:
+                    locDelta *= 1.5f;
+                    break;
+                case LocationStatus.AtLocation:
+                    locDelta *= 1.25f;
+                    break;
+                case LocationStatus.NearLocation:
+                    locDelta *= 0.5f;
+                    break;
+                case LocationStatus.Nowhere:
+                    locDelta = 0f;
+                    break;
+            }
+
+            if (locDelta != 0f)
+            {
+                ChangeLocationOpinion(currentLocation.locationName, locDelta);
+
+                /*int memoryCount = Mathf.Abs(Mathf.RoundToInt(locDelta / 5f));
+                for (int i = 0; i < memoryCount; i++)
+                {
+                    if (locDelta > 0)
+                        goodLocationMemories.Add(currentLocation.locationName);
+                    else
+                        badLocationMemories.Add(currentLocation.locationName);
+                }*/
+
+                Debug.Log($"{charName}'s opinion of {currentLocation.locationName} changed by {locDelta}");
+            }
+        }
 
         // Register each good/bad memory properly
         for (int i = 0; i < good; i++)

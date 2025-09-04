@@ -1,4 +1,127 @@
+using System.Collections.Generic;
 using UnityEngine;
+
+
+[System.Serializable]
+public class QuestStage
+{
+    public string description;
+    public int targetValue; // How many actions to complete this stage (e.g., talk to 3 people)
+    public int currentValue; // How much progress has been made
+    public bool IsComplete => currentValue >= targetValue;
+
+    public void IncrementProgress()
+    {
+        currentValue++;
+    }
+
+    public void ResetProgress()
+    {
+        currentValue = 0;
+    }
+}
+
+
+
+[System.Serializable]
+public class Quest
+{
+    public string questName;
+    public string questID; // Can be "Main", "Akeno", "Uki", etc.
+    public List<QuestStage> stages = new List<QuestStage>();
+    public int currentStageIndex = 0;
+
+    public QuestStage CurrentStage => currentStageIndex < stages.Count ? stages[currentStageIndex] : null;
+    public bool IsComplete => currentStageIndex >= stages.Count;
+
+    public void AdvanceStage()
+    {
+        if (!IsComplete)
+        {
+            currentStageIndex++;
+        }
+    }
+
+    public void IncrementProgress()
+    {
+        if (!IsComplete)
+        {
+            CurrentStage.IncrementProgress();
+            if (CurrentStage.IsComplete)
+            {
+                AdvanceStage();
+            }
+        }
+    }
+
+    public void ResetQuest()
+    {
+        currentStageIndex = 0;
+        foreach (var stage in stages)
+        {
+            stage.ResetProgress();
+        }
+    }
+}
+
+
+
+
+
+public class QuestManager : MonoBehaviour
+{
+    public static QuestManager instance;
+
+    [SerializeField] private List<Quest> quests = new List<Quest>();
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public Quest GetQuestByID(string id)
+    {
+        return quests.Find(q => q.questID == id);
+    }
+
+    public void IncrementQuestProgress(string questID)
+    {
+        Quest quest = GetQuestByID(questID);
+        if (quest != null)
+        {
+            quest.IncrementProgress();
+            Debug.Log($"Progressed quest: {quest.questName}, Stage {quest.currentStageIndex + 1}");
+        }
+    }
+
+    public void ResetQuest(string questID)
+    {
+        Quest quest = GetQuestByID(questID);
+        if (quest != null)
+        {
+            quest.ResetQuest();
+        }
+    }
+
+    public string GetQuestStageString(string questID)
+    {
+        Quest quest = GetQuestByID(questID);
+        if (quest != null)
+        {
+            return $"Stage {quest.currentStageIndex + 1} / {quest.stages.Count}";
+        }
+        return "Quest not found";
+    }
+}
+
 
 public class QuestIDManager : MonoBehaviour
 {

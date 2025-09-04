@@ -55,7 +55,7 @@ public class NPCDialog : MonoBehaviour
             if (!isDialogExhausted)
             {
                 isDialogExhausted = true;
-                QuestIDManager.instance.NPCDialogExhausted(); // Notify Quest Manager
+                //QuestIDManager.instance.NPCDialogExhausted(); // Notify Quest Manager
             }
             return dialogLines[currentLineIndex];
         }
